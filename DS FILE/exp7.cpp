@@ -1,119 +1,95 @@
 #include<iostream>
+#define max 5
 using namespace std;
-struct node
+int front=-1;
+int rear=-1;
+int q[5];
+
+void display()
 {
-    int info;
-    struct node *next;
-};
-struct linked_list
-{
-    node *front,*rear;
-    linked_list()
+    if(front==-1)
     {
-        front=NULL;
-        rear=NULL;
+        cout<<"queue empty";
     }
-    void insert_beg();
-    void display();
-    node* createnode(int);
-    void del();
-};
-node* linked_list::createnode(int x)
-{
-    node *temp=new node;
-    temp->info=x;
-    temp->next=NULL;
-    return temp;
-}
-void linked_list::insert_beg()
-{
-    int ele;
-    cin>>ele;
-    node *p,*ptr;
-    p=createnode(ele);
-    if(front==NULL)
+    if(rear>=front)
     {
-        front=p;
-        rear=p;
+        for(int i=front;i<=rear;i++)
+        {
+            cout<<q[i]<<" ";
+        }
     }
     else
     {
-        rear->next=p;
-        rear=p;
+        for(int i=front;i<max;i++)
+        {
+            cout<<q[i]<<" ";
+        }
+        for(int i=0;i<=rear;i++)
+        {
+            cout<<q[i]<<" ";
+        }
     }
+      cout<<endl;
 }
-void linked_list::display()
+
+ void dequeue()
+ {
+     if(front==-1)
+     {
+         cout<<"empty queue";
+     }
+     if(front==rear)
+     {
+         front=-1;
+         rear=-1;
+     }
+     else if(front==max-1)
+     {
+         front=0;
+     }
+     else
+        front++;
+ }
+
+int enqueue(int num)
 {
-    rear->next=front;
-    node *temp=front;
-    if(front==NULL)
+    if((front==0 && rear==max-1)||(rear==(front-1)%(max-1)))
     {
-        cout<<"Underflow";
-        cout<<"\nQueue is empty";
+        cout<<"queue full";
+        cout<<endl;
+        return 0;
+    }
+    if(front==-1)
+    {
+        front=rear=0;
+        q[rear]=num;
+    }
+    else if(rear==max-1 && front!=0)
+    {
+        rear=0;
+        q[rear]=num;
     }
     else
     {
-        while(temp->next!=front)
-        {
-            cout<<temp->info<<"->";
-            temp=temp->next;
-        }
-        cout<<temp->info;
-    }
-}
-void linked_list::del()
-{
-    if(front==rear)
-    {
-        cout<<"Deleted element is: "<<front->info<<endl;
-        front=NULL;
-    }
-    else if(front==NULL)
-    {
-        cout<<"Underflow";
-        cout<<"\nQueue is empty";
-    }
-    else
-    {
-        cout<<"Deleted element is: "<<front->info<<endl;
-        node* temp=front;
-        front=front->next;
-        delete temp;
-    }
-}
-int main()
-{
-    int ch,n,count=0;
-    linked_list l1;
-    cout<<"Enter the size of queue ";
-    cin>>n;
-    cout<<"\nEnter choice\n1.Insert\n2.Display\n3.Delete\n";
-    cin>>ch;
-    while(ch)
-    {
-        if(ch==1 )
-        {
-            if(count==n)
-            {
-                cout<<"Overflow";
-            }
-            else
-            {
-                l1.insert_beg();
-                count++;
-            }
-        }
-        else if(ch==2)
-        {
-            l1.display();
-        }
-        else if(ch==3)
-        {
-            l1.del();
-            count--;
-        }
-        cout<<"\nEnter choice again: ";
-        cin>>ch;
+        rear++;
+        q[rear]=num;
     }
 }
 
+int main()
+{
+    enqueue(14);
+    enqueue(22);
+    enqueue(13);
+    enqueue(-6);
+    display();
+    dequeue();
+    dequeue();
+    display();
+    enqueue(9);
+    enqueue(20);
+    enqueue(5);
+    display();
+    enqueue(20);
+    display();
+}
