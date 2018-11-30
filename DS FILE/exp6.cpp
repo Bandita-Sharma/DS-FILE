@@ -1,157 +1,141 @@
 #include<iostream>
-    using namespace std;
+#include<string.h>
+#include<ctype.h>
+#define max 20
+using namespace std;
 
-    class convert
+class infix
+{
+private:
+    char target[max],stk[max];
+    char *s,*t;
+    int top;
+public:
+    infix()
     {
-        char a[20];
-        int top;
-    public:
-        convert()
-        {
         top=-1;
-        }
-        void push(int x)
-        {
-            a[++top]=x;
-        }
-        char pop()
-        {
-            return a[top--];
-        }
-        int priority(char p)
-        {
-            if(p=='(' )
-                return 0;
-            else if(p=='+'||p=='-')
-                return 1;
-            else if(p=='*'|| p=='/')
-                return 2;
-            else if(p=='^')
-                return 3;
-        }
-
-    void in_po(char exp[20])
+        t=target;
+        s=stk;
+    }
+    void setexpr(char *expr)
     {
-        char *e;
-        char x;
-        e=exp;
-        while(*e!='\0')
+        s=expr;
+    }
+    void push(char c)
+    {
+        if(top==max-1)
         {
-            if(isalnum(*e))
-            {
-                cout<<*e;
-            }
-            else if(*e=='(')
-            {
-                push(*e);
-            }
-            else if(*e==')')
-            {
-                while((x=pop())!='(')
-                cout<<x;
-            }
-            else
-            {
-                while(priority(a[top])>=priority(*e))
-                    cout<<pop();
-                push(*e);
-            }
-            e++;
+            cout<<"stack is full";
         }
-        while(top!=-1)
+        else
         {
-            x=pop();
-            cout<<x;
+            top++;
+            stk[top]=c;
         }
     }
-};
-
-class s1
+    char pop()
     {
-        public:
-        char a[20];
-        int top;
-        s1()
+        if(top==-1)
         {
-        top=-1;
+            cout<<"stack underflow";
+            return -1;
         }
-        void push(int x)
+        else
         {
-            a[++top]=x;
+            char item=stk[top];
+            top--;
+            return item;
         }
-        int pop()
-        {
-            return a[top--];
-        }
-    void in_po(char exp[20])
+    }
+    int priority(char c)
     {
-        char *e;
-        char x;
-        int num;
-        e=exp;
-        while(*e!='\0')
+        if(c=='$')
+            return 3;
+        if(c=='*'||c=='/')
+            return 2;
+        if(c=='+'||c=='-')
+            return 1;
+        else
+            return 0;
+    }
+    void convert()
+    {
+        while(*s)
         {
-            if(isalnum(*e))
+            if(isdigit(*s)||isalpha(*s))
             {
-                num=*e-48;
-                push(num);
-            }
-            else
-            {
-                int a=pop();
-                int b=pop();
-                int c;
-                switch(*e)
+                while(isdigit(*s)||isalpha(*s))
                 {
-                    case '+':
-                        c=a+b;
-                        push(c);
-                        break;
-                    case '-':
-                        c=a-b;
-                        push(c);
-                        break;
-                    case '/':
-                        c=a/b;
-                        push(c);
-                        break;
-                    case '*':
-                        c=a*b;
-                        push(c);
-                        break;
-                    case '^':
-                        c=a^b;
-                        push(c);
-                        break;
+                    *t=*s;
+                    t++;
+                    s++;
                 }
             }
-            e++;
+            if(*s=='(')
+            {
+                push(*s);
+                s++;
+            }
+            char opr;
+            if(*s == '*' || *s == '+' || *s == '/' || *s == '%' || *s == '-' || *s == '$' )
+            {
+                if(top!=-1)
+                {
+                    opr=pop();
+                    if(priority(opr)>=priority(*s))
+                    {
+                        *t=opr;
+                        t++;
+                        push(*s);
+                    }
+                    else
+                    {
+                        push(opr);
+                        push(*s);
+                    }
+                }
+                else
+                {
+                    push(*s);
+                }
+                s++;
+            }
+            if(*s==')')
+            {
+                opr=pop();
+                while((opr)!='(')
+                {
+                    *t=opr;
+                    t++;
+                    opr=pop();
+                }
+                s++;
+            }
         }
         while(top!=-1)
         {
-            cout<<pop();
+            char opr=pop();
+            *t=opr;
+            t++;
         }
+        *t='\0';
+    }
+    void show()
+    {
+        cout<<target;
     }
 };
+
 
     int main()
     {
-        int ch;
-        cout<<"Enter choice:\n1 for Infix to postfix conversion\n2 for Postfix Evaluation\n";
-        cin>>ch;
-        if(ch==1)
-        {
-            convert r;
-            char ss[20];
-            cin>>ss;
-            r.in_po(ss);
+            infix q;
+    char expr[max];
+    cout<<"enter an infix expression:";
+    cin.getline(expr,max);
+    q.setexpr(expr);
+    q.convert();
+    cout<<"Postfix expression is:";
+    q.show(); 
         }
-        else if(ch==2)
-        {
-            s1 r;
-            char ss[20];
-            cin>>ss;
-            r.in_po(ss);
-        }
-    }
 
