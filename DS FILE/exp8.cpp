@@ -2,17 +2,22 @@
 using namespace std;
 void insertionsort(int a[],int n)
 {
-    int i,j,k,temp,m;
-    for(i=0;i<n;i++)
+     for(i=1;i<=n-1;i++)
     {
-        m=a[i];
-        j=i;
-        while(a[j-1]>m && j>0)
+        temp=a[i];
+        j=i-1;
+        while((temp<a[j])&&(j>=0))
         {
-            a[j]=a[j-1];
-            j--;
+            a[j+1]=a[j];
+            j=j-1;
         }
-        a[j]=m;
+        a[j+1]=temp;
+        cout<<"Pass"<<i<<":";
+        for(j=0;j<n;j++)
+        {
+            cout<<a[j]<<" ";
+        }
+        cout<<endl;
     }
 }
 
