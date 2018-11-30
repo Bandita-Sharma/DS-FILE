@@ -1,205 +1,372 @@
+/*circular link list*/
 #include<iostream>
+#include<stdlib.h>
 using namespace std;
-struct node
+class cll
 {
-    int info;
-    struct node *prev;
-    struct node *next;
-};
-struct linked_list
+	struct node
+	{
+		int data;
+	    struct node *next;
+	}*start,*last;
+
+public:
+cll()
 {
-    node *head,*tail;
-    linked_list()
-    {
-        head=NULL;
-        tail=NULL;
-    }
-    void insert_beg();
-    void display();
-    void insert2();
-    void deletion();
-    void searching();
-};
-node* createnode(int x)
-{
-    node *temp=new node;
-    temp->info=x;
-    temp->prev=NULL;
-    temp->next=NULL;
-    return temp;
+	start=NULL;
 }
-void linked_list::insert_beg()
+    void create();
+    void show();
+    void insert_at_beg();
+    void insert_at_end();
+    void insert_before_element();
+    void insert_after_element();
+    void insert_at_specfic();
+    void delete_at_beg();
+    void delete_at_end();
+    void delete_an_ele(int);
+    void searching();
+    void sorting();
+};
+
+void cll::create()
+{
+	int n;
+	cout<<"Enter the number & end by -1"<<endl;
+	cin>>n;
+	while(n!=-1)
+	{
+		struct node * new_node,*ptr;
+		new_node=new node;
+
+		if(start==NULL)
+		{
+			new_node->data=n;
+			new_node->next=new_node;
+			start=new_node;
+		}
+			else
+		{
+		ptr=start;
+		while(ptr->next!=start)
+		{
+			ptr=ptr->next;
+		}
+		//start=ptr;
+
+			new_node->data=n;
+			new_node->next=start;
+			start=new_node;
+			ptr->next=new_node;
+		}
+		cin>>n;
+	}
+}
+
+void cll::insert_at_beg()
+{
+int num;
+    struct node*new_node;
+    new_node=new node;
+    cout<<"insert element";
+    cin>>num;
+    new_node->data=num;
+    new_node->next=start;
+    start=new_node;
+}
+void cll::insert_at_end()
 {
     int n;
-    cout<<"Enter the no. of elements you want to enter: ";
+    struct node*new_node,*ptr;
+    new_node=new node;
+    cout<<"insert element";
     cin>>n;
-    for(int i=0;i<n;i++)
+    ptr=start;
+    while(ptr->next!=start)
     {
-        int ele;
-        cin>>ele;
-        node *p,*ptr;
-        p=createnode(ele);
-        if(head==NULL)
+        ptr=ptr->next;
+    }
+    new_node->data=n;
+    new_node->next=start;
+    ptr->next=new_node;
+}
+void cll::insert_before_element()
+{
+    int num,item;
+    struct node*ptr,*save;
+    save=NULL;
+    ptr=start;
+    cout<<"enter posi and num";
+    cin>>num;
+	cin>>item;
+    while(ptr->next!=start)
+    {
+        if(ptr->data==num)
         {
-            head=p;
-            tail=p;
+            if(save==start)
+            {
+                insert_at_beg();
+            }
+            else
+                {
+            struct node*new_node;
+            new_node=new node;
+            new_node->data=item;
+            new_node->next=ptr;
+            save->next=new_node;
+            break;
+            }
+        }
+        save=ptr;
+        ptr=ptr->next;
+    }
+}
+void cll::insert_after_element()
+{
+     int n,item;
+    cout<<"enter posi and num";
+    cin>>n>>item;
+    struct node*ptr,*new_node;
+    new_node=new node;
+    ptr=start;
+    while(ptr->next!=start)
+    {
+        if(ptr->data==n)
+        {
+            cout<<"After insert";
+            new_node->next=ptr->next;
+            ptr->next=new_node;
+            new_node->data=item;
+            break;
+        }
+    ptr=ptr->next;
+    }
+}
+
+void cll::show()
+{
+	struct node *ptr;
+    ptr=start;
+    do
+    {
+	cout<<ptr->data<<endl;
+	ptr=ptr->next;
+
+	}
+    while(ptr!=start);
+}
+
+
+void cll::searching()
+{
+	struct node* ptr;
+    int n,flag=0;
+    cout<<"Enter element to search"<<endl;
+	cin>>n;
+    ptr=start;
+    if (ptr==start)
+    {
+      if (ptr->data==n)
+      {
+        flag=1;
+      }
+      else
+      {
+        flag=0;
+      }
+      if (flag==1)
+      {
+        cout<<"Element exists in the list"<<endl;
+      }
+      else
+      {
+      ptr=ptr->next;
+      while(ptr->next!=start)
+       {
+         if (ptr->data==n)
+         {
+            flag=1;
+			break;
+         }
+         else
+         {
+            flag=0;
+            ptr=ptr->next;
+         }
+       }
+        if (flag==1)
+        {
+            cout<<"Element exists in the list"<<endl;
+        }
+      }
+    }
+      if (ptr->next==start)
+      {
+        if (ptr->data==n)
+        {
+            flag=1;
         }
         else
         {
-            p->next=head;
-            head->prev=p;
-            head=p;
+            flag=0;
         }
-    }
-    tail->next=head;
-    head->prev=tail;
-}
-void linked_list::insert2()
-{
-    int ch,ele,x;
-    cout<<"\nEnter choice:\n1 for insertion in beginning\n2 for insertion at end\n3 for insertion in between\n";
-    cin>>ch;
-    node *p=NULL,*temp,*ptr;
-    while(ch!=0)
-    {
-        switch(ch)
+        if (flag==1)
         {
-        case 1:
-            cout<<"Enter the element to add: ";
-            cin>>ele;
-            p=createnode(ele);
-            p->next=head;
-            head->prev=p;
-            head=p;
-            tail->next=head;
-            head->prev=tail;
-            break;
-        case 2:
-            cout<<"Enter the element to add: ";
-            cin>>ele;
-            p=createnode(ele);
-            tail->next=p;
-            p->prev=tail;
-            tail=p;
-            tail->next=head;
-            head->prev=tail;
-            break;
-        case 3:
-            cout<<"\nEnter an element you want to add: ";
-            cin>>ele;
-            cout<<"Enter the element after you want to add: ";
-            cin>>x;
-            p=createnode(ele);
-            ptr=head;
-            while(ptr->info!=x)
-            {
-                ptr=ptr->next;
-            }
-            temp=ptr->next;
-            ptr->next=p;
-            p->prev=ptr;
-            temp->prev=p;
-            p->next=temp;
-            break;
-        default:
-            cout<<"Wrong choice\nPlease enter 1-3 else 0 to exit.";
-            break;
+            cout<<"Element exists in the list"<<endl;
         }
-        cout<<"\nEnter choice to insert: ";
-        cin>>ch;
-    }
-    cout<<"\nElement Inserted";
-}
-void linked_list::deletion()
-{
-    int ele;
-    cout<<"\nEnter an element you want to delete: ";
-    cin>>ele;
-    node *temp,*p;
-    p=head;
-    if(head->info==ele)   //Deletion in beginning
-    {
-        head=head->next;
-        tail->next=head;
-        head->prev=tail;
-    }
-    else if(tail->info==ele)  //Deletion at end
-    {
-        tail=tail->prev;
-        tail->next=head;
-        head->prev=tail;
-    }
-    else                   //Deletion in between
-    {
-        while(p->info!=ele)
+        else if (flag==0)
         {
-            p=p->next;
+            cout<<"Element doesnt exist in the list"<<endl;
         }
-        temp=p->prev;
-        temp->next=p->next;
-        p->next->prev=temp;
-    }
-    cout<<"\nElement deleted";
-
+      }
 }
-void linked_list::searching()
-{
-    int ele;
-    cout<<"Enter element you want to search: ";
-    cin>>ele;
-    node *p;
-    p=head;
-    while(p->info!=ele && p->next!=head)
+   void cll:: delete_at_beg()
     {
-        p=p->next;
-    }
-    if(p->info==ele)
-        cout<<"\nNode exists";
-    else
-        cout<<"\nNode does not exist";
-}
-
-void linked_list::display()
-{
-    node *ptr=head;
-    if(head==NULL)
-        cout<<"Linked List is empty";
-    else
-        while(ptr->next!=head)
+        struct node *ptr;
+        ptr=start;
+        while(ptr->next!=start)
         {
-            cout<<ptr->info<<"->";
             ptr=ptr->next;
         }
-        cout<<ptr->info;
+        start=start->next;
+        ptr->next=start;
+    }
+    void cll:: delete_at_end()
+    {
+        struct node *ptr,*save;
+        ptr=start;
+        save=NULL;
+        while(ptr->next!=start)
+        {
+            save=ptr;
+            ptr=ptr->next;
+        }
+        save->next=start;
+    }
+
+ void cll:: delete_an_ele(int n)
+    {
+        struct node *ptr,*save;
+        ptr=start;
+        save=NULL;
+        do
+        {
+            if(save==NULL)
+            {
+                delete_at_beg();
+            }
+            else if(ptr->next==start)
+            {
+                delete_at_end();
+            }
+            else if(ptr->data==n)
+            {
+                save->next=ptr->next;
+                delete ptr;
+            }
+            save=ptr;
+            ptr=ptr->next;
+        }
+        while(ptr!=start);
+    }
+void cll::insert_at_specfic()
+{
+	struct node* node,*ptr,*new1;
+	int node_no=1,insert_no,flag=0,count,i;
+	node=start->next;
+	ptr=start;
+	count=i;
+	cout<<"\n Enter position where you want to insert new node:-";
+	cin>>insert_no;
+
+	while(count)
+	{
+		if(node_no==insert_no)
+		{
+			cout<<"\n Insert data for new node:-";
+			cin>>new1->data;
+			ptr->next=new1;
+			new1->next=node;
+			flag=1;
+			break;
+		}
+		else
+		{
+			ptr=ptr->next;
+			node=node->next;
+		}
+		node_no++;
+		count--;
+	}
+	if(flag==0)
+	{
+		cout<<"Position not found";
+	}
+	else
+	{
+		i++;
+    }
 }
-int main()
+void cll::sorting()
+{
+	struct node* ptr,*ptr1,*ptr2;
+	int i,j,temp,n=1;
+	ptr=start;
+    do
+    {
+	ptr=ptr->next;
+        n++;
+	}
+    while(ptr!=start);
+	for(i=1;i<=n-1;i++)
+	{
+		ptr1=start;
+		ptr2=ptr1->next;
+	    for(j=1;j<=n-i;j++)
+		{
+			if(ptr1->data>ptr2->data)
+			{
+				temp=ptr1->data;
+			    ptr1->data=ptr2->data;
+			    ptr2->data=temp;
+			    //ptr1=ptr1->next;
+			    //ptr2=ptr2->next;
+			}
+				ptr1=ptr1->next;
+			    ptr2=ptr2->next;
+		}
+	}
+}
+main()
 {
     int ch;
-    linked_list l1;
-    l1.insert_beg();
-    cout<<"\nEnter choice:\n1 for insertion\n2 for deletion\n3 for searching\n4 for display\n";
-    cin>>ch;
-    while(ch!=0)
+	cll list;
+	  while(1)
     {
+        cout <<"\n1.Insert at beg\n2.Insert at End\n3.Insert in between a given number \n4.Delete an existing element \n5.Sorting \n6.Searching an element \n7.Display all the elements \n8.Exit\nEnter your choice : ";
+        cin >> ch;
         switch(ch)
-        {
-        case 1:
-            l1.insert2();
+		{
+            case 1:
+            list.insert_at_beg();
             break;
-        case 2:
-            l1.deletion();
+            case 2:list.insert_at_end();
+			break;
+			case 3:list.insert_at_specfic();
+			break;
+			case 4: int n;
+            cout<<"Enter the element to be deleted\n";
+            cin>>n;
+            list.delete_an_ele(n);
             break;
-        case 3:
-            l1.searching();
-            break;
-        case 4:
-            l1.display();
-            break;
-        default:
-            cout<<"\nWrong choice\n";
-            break;
+			case 5:list.sorting();
+			break;
+			case 6:list.searching();
+			break;
+			case 7:list.show();
+			break;
+            case 8: exit(0);
         }
-        cout<<"\nEnter choice again:\n1 for insertion\n2 for deletion\n3 for searching\n4 for display\n";
-        cin>>ch;
     }
+
 }
