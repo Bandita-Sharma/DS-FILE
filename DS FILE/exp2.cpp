@@ -1,55 +1,28 @@
 #include<iostream>
 using namespace std;
 
-class arr
-{
-	public:
-		void create();
-		void display();
-};
-void arr::create()
-{
-	int i,n,flag=0,j;
-    cout<<"enter the no. of elements in an array"<<endl;
-	cin>>j;
-	int a[j];
-	cout<<"enter the "<<j<<" elements"<<endl;
-	for(i=0;i<j;i++)
-	{
-	cin>>a[i];
-    }
-}
-void arr::display()
-{
-	int flag=0,n,i,j,a[100];
-    cout<<"enter no. to be checked"<<endl;
-	cin>>n;
-	for(i=0;i<j;i++)
-	{
-		if(a[i]==n)
-		{
-			flag=1;
-			cout<<"index of no. is "<<i<<endl;
-			break;
-		}
-		else{
-			flag=0;
-		}
-	}
-	if(flag==1)
-	{
-		cout<<"Number you entered is present";
-
-	}
-	else
-    {
-        cout<<"Number you entered is not present";
-	}
-}
 int main()
 {
-	arr ll;
-	ll.create();
-	ll.display();
+    int n,i,flag=0;
+    cin>>n;
+    cout<<"enter the elements:"<<endl;
+    int a[n];
+    for(i=0;i<n;i++)
+    {
+        cin>>a[i];
+    }
+    int num;
+    cin>>num;
+    for(i=0;i<n;i++)
+    {
+        if(a[i]==num)
+        {
+            cout<<i;
+            flag=1;
+            return 0;
+        }
+    }
+     if(flag==0){
+            cout<<"number not present";
+        }
 }
-
